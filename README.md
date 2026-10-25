@@ -57,8 +57,8 @@ Lumen 按这一原则划分层级：
 
 ## 获取与运行
 
-发布构建通过 [GitHub Releases](https://github.com/yhchank/lumen-glass-player/releases/latest) 分发。
-仓库本身只包含源码，不提交二进制安装包。
+发布构建不提交到 Git 仓库；可以在本地生成，或上传到
+[GitHub Releases](https://github.com/yhchank/lumen-glass-player/releases)。
 
 如果需要在本地构建发布文件：
 
