@@ -1,0 +1,120 @@
+/* ------------------------------------------------------------------ */
+/* Application appearance                                              */
+/*                                                                     */
+/* Opaque content layer, fixed identity palette, one glass toolbar.    */
+/* No animated background, light fields or cover-tinted chrome. The    */
+/* Canvas spectrum runs at 30fps while playing and stops when paused.  */
+/* ------------------------------------------------------------------ */
+
+html,
+body,
+.app {
+  background: #0f1218;
+}
+
+/* Content cards skip backdrop sampling. Glass is reserved for the dock,
+   its controls and floating overlays. */
+.app .table-card {
+  background: linear-gradient(155deg, #141922 0%, #0f1319 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.035) inset,
+    0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+.app .titlebar__status {
+  background: rgba(255, 255, 255, 0.028);
+}
+
+.app .quality-pill {
+  background: rgba(9, 12, 17, 0.86);
+}
+
+.app .cover-stage__frame {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 18px 42px rgba(0, 0, 0, 0.4),
+    0 3px 10px rgba(0, 0, 0, 0.24);
+}
+
+.app .cover-stage__gleam {
+  opacity: 0.7;
+}
+
+.app .empty-vinyl {
+  animation: none;
+  transform: none;
+  box-shadow:
+    0 24px 54px rgba(0, 0, 0, 0.42),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.app .status-pulse::after {
+  animation: none;
+  opacity: 0.36;
+}
+
+.app .now-state__eq i,
+.app .mini-eq i,
+.app .queue-now__playing-indicator i {
+  animation: none;
+  opacity: 0.85;
+}
+
+.app .now-state__eq i:nth-child(1),
+.app .mini-eq i:nth-child(1) {
+  height: 6px;
+}
+
+.app .now-state__eq i:nth-child(2),
+.app .mini-eq i:nth-child(2) {
+  height: 11px;
+}
+
+.app .now-state__eq i:nth-child(3),
+.app .mini-eq i:nth-child(3) {
+  height: 8px;
+}
+
+.app .now-state__eq i:nth-child(4) {
+  height: 12px;
+}
+
+.app .drop-overlay {
+  background: rgba(4, 6, 10, 0.82);
+}
+
+.import-progress {
+  background: rgba(13, 17, 23, 0.97);
+}
+
+.lg-toast {
+  background: rgba(20, 24, 31, 0.98);
+}
+
+/* Chromium's modern property is enough; keeping only the unprefixed form
+   prevents a minifier from dropping the standard declaration. */
+.app .table-card,
+.app .titlebar__status,
+.app .quality-pill,
+.app .queue-row__remove,
+.app .drop-overlay,
+.import-progress,
+.lg-toast {
+  backdrop-filter: none !important;
+}
+
+.app .play-button.lg-button {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset,
+    0 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+.app .import-button.lg-button {
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 1180px) {
+  .app .empty-copy h1 {
+    font-size: clamp(28px, 4.4vw, 38px);
+  }
+}

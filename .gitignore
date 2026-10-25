@@ -1,0 +1,21 @@
+node_modules/
+dist/
+release/
+archive/
+.npm-cache/
+.pnpm-store/
+.pnpm-cache/
+.electron-cache/
+.dev-userdata/
+.screenshot-userdata/
+.packaged-test-profile/
+.empty-test-profile/
+.small-test-profile/
+.test-audio/
+.tmp*/
+tmp-electron-test/
+LumenData/
+*.log
+.DS_Store
+/screenshots/
+Say Dont Go.mp3
