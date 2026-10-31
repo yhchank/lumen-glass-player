@@ -598,6 +598,9 @@
   width: 10px;
   height: 10px;
   top: calc(50% - 5px);
+  /* Track is inset 6px; keep the 10px knob centred on the fill edge. */
+  inset-inline-start: calc(1px + var(--lg-progress) * (100% - 12px));
+  z-index: 4;
   background: #f5fffd;
   border: 0;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-a) 22%, transparent);
@@ -672,6 +675,9 @@
   width: 9px;
   height: 9px;
   top: calc(50% - 4.5px);
+  /* Track is inset 5px; keep the 9px knob centred on the fill edge. */
+  inset-inline-start: calc(0.5px + var(--lg-progress) * (100% - 10px));
+  z-index: 4;
   background: #fff;
 }
 

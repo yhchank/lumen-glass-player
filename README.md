@@ -2,7 +2,7 @@
 
 面向 Windows 的液态玻璃风格本地音乐播放器，使用
 [`@ttqtt/liquid-glass-react`](https://tsdsj.github.io/liquid-glass-react/#/components)
-构建。当前发布版为单版本 **Lumen 1.1.1**。源码仓库：
+构建。当前发布版为单版本 **Lumen 1.1.2**。源码仓库：
 [github.com/yhchank/lumen-glass-player](https://github.com/yhchank/lumen-glass-player)
 
 ![Lumen 正在播放](docs/screenshots/now-playing.png)
@@ -69,9 +69,9 @@ npm run dist
 
 产物会写入 `release/`：
 
-- `Lumen-1.1.1-win64.zip` — 解压后双击 `Lumen.exe`。
-- `Lumen-Setup-1.1.1.exe` — 安装版，可创建桌面 / 开始菜单快捷方式并注册音频关联。
-- `Lumen-1.1.1-Portable.exe` — 单文件便携版。
+- `Lumen-1.1.2-win64.zip` — 解压后双击 `Lumen.exe`。
+- `Lumen-Setup-1.1.2.exe` — 安装版，可创建桌面 / 开始菜单快捷方式并注册音频关联。
+- `Lumen-1.1.2-Portable.exe` — 单文件便携版。
 
 当前发布版尚未做商业代码签名，Windows 可能显示“未知发布者”提示。
 选择“更多信息 → 仍要运行”即可。
@@ -196,7 +196,7 @@ node scripts/capture-ui.mjs
 
 ## 归档
 
-早期常规版与低占用版仅保留在本地 `archive/`，不随源码仓库发布。当前唯一发布版为 Lumen 1.1.1。更新记录见 [CHANGELOG.md](CHANGELOG.md)。
+早期常规版与低占用版仅保留在本地 `archive/`，不随源码仓库发布。当前唯一发布版为 Lumen 1.1.2。更新记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 数据与隐私
 
@@ -214,4 +214,5 @@ node scripts/capture-ui.mjs
 ## 许可
 
 MIT，详见 `LICENSE`。
+
 
