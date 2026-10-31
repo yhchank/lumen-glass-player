@@ -8,8 +8,8 @@ using System.Windows.Forms;
 [assembly: System.Reflection.AssemblyDescription("Lumen 液态玻璃音乐播放器")]
 [assembly: System.Reflection.AssemblyProduct("Lumen")]
 [assembly: System.Reflection.AssemblyCompany("Lumen")]
-[assembly: System.Reflection.AssemblyVersion("1.1.2.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.1.2.0")]
+[assembly: System.Reflection.AssemblyVersion("1.1.3.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.1.3.0")]
 
 internal static class LumenLauncher
 {

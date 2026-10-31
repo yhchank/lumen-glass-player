@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
@@ -695,10 +696,124 @@ function registerIpc() {
     return result;
   });
 
-  ipcMain.handle('shell:show-item', (_event, filePath) => {
-    if (typeof filePath === 'string' && fs.existsSync(filePath)) {
-      shell.showItemInFolder(filePath);
+  ipcMain.handle('library:folder-info', async (_event, filePath) => {
+    if (typeof filePath !== 'string' || !filePath.trim()) {
+      return { ok: false, reason: 'invalid' };
     }
+
+    let target;
+    try {
+      target = path.resolve(filePath);
+    } catch {
+      return { ok: false, reason: 'invalid' };
+    }
+
+    const folder = path.dirname(target);
+    const currentName = path.basename(target);
+
+    try {
+      const dirents = await fsp.readdir(folder, { withFileTypes: true });
+      const entries = dirents.map((entry) => ({
+        name: entry.name,
+        isDirectory: entry.isDirectory(),
+        current: entry.name === currentName,
+      }));
+      entries.sort((left, right) => {
+        if (left.current !== right.current) return left.current ? -1 : 1;
+        if (left.isDirectory !== right.isDirectory) return left.isDirectory ? -1 : 1;
+        return left.name.localeCompare(right.name, 'zh-CN', { numeric: true });
+      });
+      return {
+        ok: true,
+        folder,
+        file: currentName,
+        path: target,
+        total: entries.length,
+        truncated: entries.length > 300,
+        entries: entries.slice(0, 300),
+      };
+    } catch {
+      return { ok: false, reason: 'unreadable', folder };
+    }
+  });
+
+  ipcMain.handle('shell:show-item', async (_event, filePath) => {
+    if (typeof filePath !== 'string' || !filePath.trim()) {
+      return { ok: false, reason: 'invalid' };
+    }
+
+    let target;
+    try {
+      target = path.resolve(filePath);
+    } catch {
+      return { ok: false, reason: 'invalid' };
+    }
+
+    const folder = path.dirname(target);
+    const fileExists = fs.existsSync(target);
+
+    if (process.platform === 'win32') {
+      // ShellExecute can be blocked when Lumen is hosted by a restricted
+      // Windows job. A tiny cmd trampoline runs Explorer outside that path.
+      const openExplorer = (kind, targetPath) => {
+        const scriptName =
+          kind === 'select' ? 'lumen-reveal-item.cmd' : 'lumen-reveal-folder.cmd';
+        const scriptPath = path.join(app.getPath('userData'), scriptName);
+        const command =
+          kind === 'select'
+            ? '@echo off\r\nexplorer.exe /e,/select,"%~1"\r\n'
+            : '@echo off\r\nexplorer.exe /e,"%~1"\r\n';
+        try {
+          fs.writeFileSync(scriptPath, command, 'utf8');
+          const child = spawn('cmd.exe', ['/d', '/c', scriptPath, targetPath], {
+            detached: true,
+            stdio: 'ignore',
+            windowsHide: true,
+          });
+          child.on('error', () => {});
+          child.unref();
+          return true;
+        } catch {
+          return false;
+        }
+      };
+
+      if (fileExists && openExplorer('select', target)) {
+        return { ok: true, mode: 'select', folder };
+      }
+      if (fs.existsSync(folder) && openExplorer('folder', folder)) {
+        return {
+          ok: true,
+          mode: 'folder',
+          folder,
+          missing: !fileExists,
+        };
+      }
+    }
+
+    if (fileExists) {
+      try {
+        shell.showItemInFolder(target);
+        return { ok: true, mode: 'select', folder };
+      } catch {
+        // Fall through to opening the containing folder.
+      }
+    }
+
+    if (fs.existsSync(folder)) {
+      const error = await shell.openPath(folder);
+      if (!error) {
+        return {
+          ok: true,
+          mode: 'folder',
+          folder,
+          missing: !fileExists,
+        };
+      }
+      return { ok: false, reason: 'open-failed', folder };
+    }
+
+    return { ok: false, reason: 'missing', folder };
   });
 
   ipcMain.handle('window:control', (_event, action) => {

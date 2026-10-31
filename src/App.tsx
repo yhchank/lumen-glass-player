@@ -8,6 +8,7 @@ import {
 import type { GlassStrings } from '@ttqtt/liquid-glass-react';
 import { FileAudio, LoaderCircle, Sparkles } from 'lucide-react';
 import type {
+  FolderInfo,
   ImportResult,
   LibraryView,
   ScanProgress,
@@ -27,6 +28,7 @@ import { NowPlaying } from './components/NowPlaying';
 import { QueuePanel } from './components/QueuePanel';
 import { TrackTable } from './components/TrackTable';
 import { PlayerDock } from './components/PlayerDock';
+import { FileLocationPanel } from './components/FileLocationPanel';
 
 const STORAGE_KEY = 'lumen.library.v1';
 
@@ -150,6 +152,7 @@ function LumenApp() {
     initial.current.sortDirection,
   );
   const [scanProgress, setScanProgress] = useState<ScanProgress | null>(null);
+  const [locationInfo, setLocationInfo] = useState<FolderInfo | null>(null);
   const [dragging, setDragging] = useState(false);
   const [missingPaths, setMissingPaths] = useState<Set<string>>(new Set());
   const dragDepth = useRef(0);
@@ -511,9 +514,65 @@ function LumenApp() {
     [player],
   );
 
-  const showInFolder = useCallback(() => {
-    if (currentTrack) void window.lumen?.showItemInFolder(currentTrack.path);
-  }, [currentTrack]);
+  const revealInExplorer = useCallback(
+    async (filePath: string) => {
+      const result = await window.lumen?.showItemInFolder(filePath);
+      if (!result) return;
+
+      if (result.ok) {
+        if (result.mode === 'folder') {
+          toast({
+            message: result.missing
+              ? '文件已不在原位置，已打开所在文件夹。'
+              : '已打开所在文件夹。',
+            tone: result.missing ? 'warning' : 'success',
+            duration: 3000,
+          });
+        } else {
+          toast({ message: '已在文件夹中显示。', tone: 'success', duration: 2000 });
+        }
+        return;
+      }
+
+      const folder = result.folder;
+      toast({
+        message:
+          result.reason === 'missing'
+            ? '文件已不在原位置，无法打开所在文件夹。'
+            : '无法打开所在文件夹。',
+        tone: 'error',
+        duration: 5200,
+        action: folder
+          ? {
+              label: '复制文件夹路径',
+              onSelect: () => {
+                void navigator.clipboard.writeText(folder).catch(() => {});
+              },
+            }
+          : undefined,
+      });
+    },
+    [toast],
+  );
+
+  const showInFolder = useCallback(async () => {
+    if (!currentTrack) return;
+    const info = await window.lumen?.readFolder(currentTrack.path);
+    if (!info?.ok) {
+      notifyError(info?.reason === 'unreadable' ? '无法读取文件所在文件夹。' : '无法定位文件。');
+      return;
+    }
+    setLocationInfo(info);
+  }, [currentTrack, notifyError]);
+
+  const copyLocationPath = useCallback(() => {
+    const folder = locationInfo?.folder;
+    if (!folder) return;
+    void navigator.clipboard
+      .writeText(folder)
+      .then(() => toast({ message: '已复制文件夹路径。', tone: 'success', duration: 1800 }))
+      .catch(() => notifyError('复制文件夹路径失败。'));
+  }, [locationInfo, notifyError, toast]);
 
   const handleViewChange = useCallback((nextView: LibraryView) => {
     setView(nextView);
@@ -809,6 +868,18 @@ function LumenApp() {
             />
           </div>
         </div>
+      )}
+
+      {locationInfo && (
+        <FileLocationPanel
+          info={locationInfo}
+          onClose={() => setLocationInfo(null)}
+          onReveal={() => {
+            const filePath = locationInfo.path;
+            if (filePath) void revealInExplorer(filePath);
+          }}
+          onCopy={copyLocationPath}
+        />
       )}
     </div>
   );

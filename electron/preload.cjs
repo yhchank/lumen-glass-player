@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('lumen', {
   importPaths: (paths) => ipcRenderer.invoke('library:import-paths', paths),
   consumeLaunchPaths: () => ipcRenderer.invoke('library:consume-launch-paths'),
   verifyPaths: (paths) => ipcRenderer.invoke('library:verify', paths),
+  readFolder: (filePath) => ipcRenderer.invoke('library:folder-info', filePath),
   showItemInFolder: (filePath) => ipcRenderer.invoke('shell:show-item', filePath),
   windowControl: (action) => ipcRenderer.invoke('window:control', action),
   isMaximized: () => ipcRenderer.invoke('window:is-maximized'),

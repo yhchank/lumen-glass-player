@@ -45,6 +45,31 @@ export interface ScanProgress {
   current: string;
 }
 
+export interface RevealItemResult {
+  ok: boolean;
+  mode?: 'select' | 'folder';
+  reason?: 'invalid' | 'missing' | 'open-failed';
+  folder?: string;
+  missing?: boolean;
+}
+
+export interface FolderEntry {
+  name: string;
+  isDirectory: boolean;
+  current: boolean;
+}
+
+export interface FolderInfo {
+  ok: boolean;
+  folder?: string;
+  file?: string;
+  path?: string;
+  total?: number;
+  truncated?: boolean;
+  entries?: FolderEntry[];
+  reason?: 'invalid' | 'unreadable';
+}
+
 export interface LumenApi {
   platform: string;
   pickFiles: () => Promise<ImportResult>;
@@ -52,7 +77,8 @@ export interface LumenApi {
   importPaths: (paths: string[]) => Promise<ImportResult>;
   consumeLaunchPaths: () => Promise<string[]>;
   verifyPaths: (paths: string[]) => Promise<Record<string, boolean>>;
-  showItemInFolder: (path: string) => Promise<void>;
+  readFolder: (path: string) => Promise<FolderInfo>;
+  showItemInFolder: (path: string) => Promise<RevealItemResult>;
   windowControl: (action: 'minimize' | 'maximize' | 'close') => Promise<boolean>;
   isMaximized: () => Promise<boolean>;
   setPlaybackState: (state: {

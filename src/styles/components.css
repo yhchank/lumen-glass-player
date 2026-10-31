@@ -1810,6 +1810,206 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* File location panel                                                 */
+/* ------------------------------------------------------------------ */
+
+.location-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(3, 5, 9, 0.64);
+}
+
+.location-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(660px, calc(100vw - 40px));
+  max-height: min(72vh, 620px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background: #11161e;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 28px 70px rgba(0, 0, 0, 0.52);
+  color: var(--text);
+}
+
+.location-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 14px 10px 16px;
+}
+
+.location-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+}
+
+.location-title svg {
+  color: var(--accent-a);
+}
+
+.location-close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: rgba(235, 244, 255, 0.5);
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.location-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.location-current {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 16px 11px;
+}
+
+.location-current__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(244, 250, 255, 0.92);
+  font-size: 13px;
+  font-weight: 620;
+}
+
+.location-current__path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(225, 238, 255, 0.38);
+  font-size: 9.5px;
+}
+
+.location-meta {
+  display: flex;
+  gap: 10px;
+  padding: 0 16px 8px;
+  color: rgba(225, 238, 255, 0.27);
+  font-size: 8.5px;
+}
+
+.location-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+  min-height: 120px;
+  overflow: auto;
+  padding: 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  background: #0d1117;
+}
+
+.location-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 31px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: rgba(233, 243, 255, 0.52);
+  font-size: 10.5px;
+}
+
+.location-row svg {
+  flex: none;
+  color: rgba(225, 238, 255, 0.32);
+}
+
+.location-row__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.location-row.is-current {
+  background: color-mix(in srgb, var(--accent-a) 12%, transparent);
+  color: rgba(247, 253, 255, 0.94);
+}
+
+.location-row.is-current svg {
+  color: var(--accent-a);
+}
+
+.location-row__badge {
+  margin-left: auto;
+  flex: none;
+  color: var(--accent-a);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+}
+
+.location-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 11px 14px 13px;
+}
+
+.location-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: rgba(236, 245, 255, 0.62);
+  font-size: 10px;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.location-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.location-button--primary {
+  border-color: color-mix(in srgb, var(--accent-a) 28%, transparent);
+  background: color-mix(in srgb, var(--accent-a) 14%, transparent);
+  color: color-mix(in srgb, var(--accent-a) 80%, #fff);
+}
+
+.location-button--primary:hover {
+  background: color-mix(in srgb, var(--accent-a) 22%, transparent);
+}
+
+@media (max-width: 620px) {
+  .location-backdrop {
+    padding: 14px;
+  }
+
+  .location-panel {
+    width: 100%;
+    max-height: 80vh;
+  }
+
+  .location-actions {
+    flex-wrap: wrap;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
